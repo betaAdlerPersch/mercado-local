@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block titulo %}Mercado Local{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header class="topo">
+        <a href="/" class="marca">
+            <span class="marca-icone" aria-hidden="true">🧺</span>
+            <span>Mercado Local</span>
+        </a>
+        <nav class="menu" aria-label="Navegação principal">
+            <a href="/">Loja</a>
+            <a href="/acompanhar">Acompanhar pedido</a>
+            <a href="/admin">Área do produtor</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block conteudo %}{% endblock %}
+    </main>
+
+    <footer class="rodape">
+        <p>Mercado Local · Produtos frescos direto de pequenos produtores da região.</p>
+        <p class="rodape-nota">Projeto Integrador Transdisciplinar em Engenharia de Software II</p>
+    </footer>
+
+    <div id="aviso" class="aviso" role="status" aria-live="polite"></div>
+    <script src="/static/js/comum.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
