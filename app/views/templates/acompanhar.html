@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}Acompanhar pedido · Mercado Local{% endblock %}
+
+{% block conteudo %}
+<section class="pagina-estreita">
+    <h1>Acompanhar pedido</h1>
+    <p>Digite o código que você recebeu ao finalizar a compra.</p>
+    <form id="form-acompanhar" class="form-inline">
+        <label class="sr-only" for="codigo">Código do pedido</label>
+        <input id="codigo" name="codigo" placeholder="ML-XXXXXX" required maxlength="12">
+        <button type="submit" class="botao-principal">Consultar</button>
+    </form>
+    <p id="erro-acompanhar" class="erro" role="alert"></p>
+    <div id="resultado"></div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/acompanhar.js"></script>
+{% endblock %}

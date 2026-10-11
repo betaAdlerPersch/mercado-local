@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<section class="destaque">
+    <div>
+        <h1>Da roça para a sua mesa.</h1>
+        <p>Frutas, verduras, queijos e delícias artesanais de produtores da região, entregues em casa.</p>
+        <p class="selo">🚚 Frete de R$ {{ frete }} · <strong>grátis a partir de R$ {{ frete_gratis }}</strong></p>
+    </div>
+</section>
+
+<div class="layout-loja">
+    <section class="catalogo" aria-labelledby="titulo-catalogo">
+        <div class="catalogo-cabecalho">
+            <h2 id="titulo-catalogo">Produtos da semana</h2>
+            <label class="busca">
+                <span class="sr-only">Buscar produto</span>
+                <input type="search" id="busca" placeholder="Buscar produto…" autocomplete="off">
+            </label>
+        </div>
+        <div id="filtros" class="filtros" role="group" aria-label="Filtrar por categoria"></div>
+        <div id="produtos" class="grade-produtos" aria-live="polite">
+            <p class="carregando">Carregando produtos…</p>
+        </div>
+    </section>
+
+    <aside class="carrinho" aria-labelledby="titulo-carrinho">
+        <h2 id="titulo-carrinho">Sua cesta</h2>
+        <ul id="itens-carrinho" class="itens-carrinho"></ul>
+        <p id="carrinho-vazio" class="vazio">Sua cesta está vazia.</p>
+
+        <dl class="resumo">
+            <div><dt>Subtotal</dt><dd id="subtotal">R$ 0,00</dd></div>
+            <div><dt>Frete</dt><dd id="frete">—</dd></div>
+            <div class="resumo-total"><dt>Total</dt><dd id="total">R$ 0,00</dd></div>
+        </dl>
+
+        <form id="form-pedido" class="form-pedido" novalidate>
+            <h3>Dados para entrega</h3>
+            <label>Nome completo
+                <input name="nome" required minlength="3" autocomplete="name">
+            </label>
+            <label>E-mail
+                <input name="email" type="email" required autocomplete="email">
+            </label>
+            <label>Telefone
+                <input name="telefone" type="text" required minlength="8" autocomplete="tel" placeholder="(11) 91234-5678">
+            </label>
+            <label>Endereço
+                <input name="endereco" required minlength="5" autocomplete="street-address" placeholder="Rua, número, complemento">
+            </label>
+            <div class="linha">
+                <label>Cidade
+                    <input name="cidade" required autocomplete="address-level2">
+                </label>
+                <label>CEP
+                    <input name="cep" required inputmode="numeric" maxlength="9" placeholder="00000-000" autocomplete="postal-code">
+                </label>
+            </div>
+            <p id="erro-pedido" class="erro" role="alert"></p>
+            <button type="submit" id="botao-finalizar" class="botao-principal">Finalizar pedido</button>
+        </form>
+    </aside>
+</div>
+
+<dialog id="confirmacao" class="dialogo">
+    <h2>Pedido recebido! 🎉</h2>
+    <p>Guarde o código abaixo para acompanhar sua entrega:</p>
+    <p id="codigo-pedido" class="codigo"></p>
+    <p id="resumo-confirmacao"></p>
+    <div class="dialogo-acoes">
+        <a id="link-acompanhar" class="botao-secundario" href="/acompanhar">Acompanhar pedido</a>
+        <button type="button" class="botao-principal" onclick="document.getElementById('confirmacao').close()">Continuar comprando</button>
+    </div>
+</dialog>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.CONFIG_FRETE = { valor: {{ frete|replace(",", ".") }}, gratisAPartirDe: {{ frete_gratis|replace(",", ".") }} };
+</script>
+<script src="/static/js/loja.js"></script>
+{% endblock %}
