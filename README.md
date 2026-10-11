@@ -1,5 +1,9 @@
 # 🧺 Mercado Local
 
+[![Testes](../../actions/workflows/testes.yml/badge.svg)](../../actions/workflows/testes.yml)
+
+**🌐 Aplicação online:** *adicionar aqui o link do Render*
+
 Loja online que conecta pequenos produtores rurais a consumidores da região. O cliente monta uma cesta de produtos frescos (hortifrúti, laticínios e empório), informa o endereço e acompanha a entrega por um código. O produtor gerencia os pedidos numa área restrita.
 
 > Projeto Integrador Transdisciplinar em Engenharia de Software II — Cruzeiro do Sul Virtual.
@@ -82,6 +86,21 @@ pytest
 ```
 
 Os testes usam o banco `mercado_local_test` (criado pelo Docker Compose) e cobrem catálogo, criação de pedidos, cálculo de valores, validações, autenticação e fluxo de estados. Plano completo em [docs/situacao-3/plano-de-testes.md](docs/situacao-3/plano-de-testes.md).
+
+A cada `push` no GitHub, os testes rodam automaticamente no **GitHub Actions** com um PostgreSQL real (aba *Actions* do repositório).
+
+## Deploy (Render)
+
+O arquivo [`render.yaml`](render.yaml) descreve a infraestrutura: um serviço web Python e um banco PostgreSQL, ambos no plano gratuito.
+
+1. Crie uma conta em [render.com](https://render.com) entrando com o GitHub.
+2. No painel, clique em **New → Blueprint** e escolha este repositório.
+3. Informe a senha do administrador (`ADMIN_PASSWORD`) quando o Render pedir.
+4. Clique em **Apply**. O Render cria o banco, instala as dependências, cria as tabelas e publica o site.
+
+Cada novo `push` na branch `main` gera um novo deploy automaticamente.
+
+> No plano gratuito, o serviço "dorme" depois de alguns minutos sem acesso; o primeiro acesso seguinte demora cerca de um minuto para acordar.
 
 ## Documentação do projeto
 

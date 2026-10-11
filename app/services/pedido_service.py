@@ -30,7 +30,7 @@ TRANSICOES_PERMITIDAS: dict[EstadoPedido, set[EstadoPedido]] = {
 
 def calcular_frete(subtotal: Decimal) -> Decimal:
     """Frete grátis a partir de R$ 150,00; abaixo disso, valor fixo."""
-    if subtotal > settings.frete_gratis_a_partir_de:
+    if subtotal >= settings.frete_gratis_a_partir_de:
         return Decimal("0.00")
     return settings.valor_frete
 
@@ -59,7 +59,9 @@ def criar_pedido(db: Session, entrada: PedidoEntrada) -> Pedido:
     produtos = {
         p.id: p
         for p in db.scalars(
-            select(Produto).where(Produto.id.in_(quantidades.keys()), Produto.ativo.is_(True))
+            select(Produto)
+            .where(Produto.id.in_(quantidades.keys()), Produto.ativo.is_(True))
+            .with_for_update()  # trava as linhas para dois pedidos simultâneos não venderem o mesmo estoque
         )
     }
 
@@ -71,6 +73,8 @@ def criar_pedido(db: Session, entrada: PedidoEntrada) -> Pedido:
             raise ErroDeNegocio(f"Produto {produto_id} não encontrado.", 404)
         if quantidade > produto.estoque:
             raise ErroDeNegocio(f"Estoque insuficiente para {produto.nome} (disponível: {produto.estoque}).")
+
+        produto.estoque -= quantidade
 
         # O preço SEMPRE vem do banco, nunca do navegador
         valor_item = produto.preco * quantidade

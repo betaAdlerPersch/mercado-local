@@ -36,7 +36,7 @@ def listar_produtos(
         .order_by(Produto.nome)
     )
     if busca:
-        consulta = consulta.where(Produto.nome.like(f"%{busca.strip()}%"))
+        consulta = consulta.where(Produto.nome.ilike(f"%{busca.strip()}%"))
     if categoria_id:
         consulta = consulta.where(Produto.categoria_id == categoria_id)
     return [_para_saida(p) for p in db.scalars(consulta)]

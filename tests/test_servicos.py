@@ -26,3 +26,16 @@ def test_hashes_da_mesma_senha_sao_diferentes():
 
 def test_hash_malformado_nao_quebra():
     assert not verificar_senha("abc", "lixo")
+
+
+def test_url_do_render_recebe_o_driver_psycopg():
+    from app.config import Settings
+
+    assert Settings(database_url="postgres://u:s@host/db").database_url == "postgresql+psycopg://u:s@host/db"
+    assert Settings(database_url="postgresql://u:s@host/db").database_url == "postgresql+psycopg://u:s@host/db"
+    assert Settings(database_url="postgresql+psycopg://u:s@host/db").database_url == "postgresql+psycopg://u:s@host/db"
+
+
+def test_frete_gratis_exatamente_no_limite():
+    """Regressão do bug #5: pedido de exatamente R$ 150,00 pagava frete."""
+    assert calcular_frete(Decimal("150.00")) == Decimal("0.00")

@@ -30,3 +30,9 @@ def test_busca_sem_resultado(cliente):
 def test_lista_categorias(cliente):
     nomes = [c["nome"] for c in cliente.get("/api/categorias").json()]
     assert nomes == ["Empório", "Hortifrúti", "Laticínios"]
+
+
+def test_busca_ignora_maiusculas(cliente):
+    """Regressão do bug #2: a busca diferenciava maiúsculas de minúsculas."""
+    produtos = cliente.get("/api/produtos?busca=tomate").json()
+    assert [p["nome"] for p in produtos] == ["Tomate orgânico"]

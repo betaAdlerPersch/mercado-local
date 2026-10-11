@@ -93,3 +93,34 @@ def test_mensagens_de_validacao_em_portugues(cliente, novo_pedido):
         "cep": "CEP deve ter 8 dígitos",
         "endereco": "muito curto (mínimo 5 caracteres)",
     }
+
+
+def test_recusa_quantidade_zero(cliente, novo_pedido):
+    """Regressão do bug #1: item com quantidade 0 era gravado no pedido."""
+    corpo = novo_pedido(itens=[{"produto_id": 1, "quantidade": 0}])
+    assert cliente.post("/api/pedidos", json=corpo).status_code == 422
+
+
+def test_compra_desconta_estoque(cliente, novo_pedido):
+    """Regressão do bug #3: o estoque não diminuía depois da compra."""
+    cliente.post("/api/pedidos", json=novo_pedido(itens=[{"produto_id": 9, "quantidade": 12}]))
+    mel = next(p for p in cliente.get("/api/produtos").json() if p["id"] == 9)
+    assert mel["estoque"] == 0
+    resposta = cliente.post("/api/pedidos", json=novo_pedido(itens=[{"produto_id": 9, "quantidade": 1}]))
+    assert resposta.status_code == 400
+
+
+def test_pedido_recusado_nao_desconta_estoque(cliente, novo_pedido):
+    """Se um item do pedido falha, o estoque dos outros itens não pode mudar."""
+    corpo = novo_pedido(itens=[{"produto_id": 1, "quantidade": 5}, {"produto_id": 10, "quantidade": 11}])
+    assert cliente.post("/api/pedidos", json=corpo).status_code == 400
+    tomate = next(p for p in cliente.get("/api/produtos").json() if p["id"] == 1)
+    assert tomate["estoque"] == 40
+
+
+@pytest.mark.parametrize("telefone", ["abcdefghij", "1234", "11 9999-999a"])
+def test_recusa_telefone_invalido(cliente, novo_pedido, telefone):
+    """Regressão do bug #4: o telefone aceitava letras."""
+    corpo = novo_pedido()
+    corpo["cliente"]["telefone"] = telefone
+    assert cliente.post("/api/pedidos", json=corpo).status_code == 422

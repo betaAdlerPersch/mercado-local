@@ -44,7 +44,7 @@
                 <input name="email" type="email" required autocomplete="email">
             </label>
             <label>Telefone
-                <input name="telefone" type="text" required minlength="8" autocomplete="tel" placeholder="(11) 91234-5678">
+                <input name="telefone" type="tel" required minlength="10" pattern="[0-9 \(\)\+\-]{10,16}" title="DDD + número, ex.: (11) 91234-5678" autocomplete="tel" placeholder="(11) 91234-5678">
             </label>
             <label>Endereço
                 <input name="endereco" required minlength="5" autocomplete="street-address" placeholder="Rua, número, complemento">

@@ -37,7 +37,7 @@
 | CT16 | Hash de senha confere, é único e resiste a hash malformado | RNF03 | test_servicos |
 | CT17 | Páginas e arquivos estáticos carregam | RNF01 | test_paginas |
 
-Resultado da última execução: *colar aqui a saída do `pytest` (ex.: `39 passed`)*.
+Resultado da última execução: `49 passed` (41 testes originais + 8 de regressão, ver [relatório de correções](relatorio-de-correcoes.md)).
 
 ## Roteiro para os testadores (validação)
 
@@ -60,3 +60,13 @@ Entregue o endereço do sistema e este roteiro a cada testador. Peça que testem
 
 **Livre**
 12. Use no celular. Tente "quebrar" o sistema de qualquer forma que imaginar.
+
+## Testes de regressão (adicionados após os testes com usuários)
+
+| ID | Caso | Bug | Arquivo |
+|---|---|---|---|
+| CT18 | Recusa item com quantidade 0 | #1 | test_pedidos |
+| CT19 | Busca ignora maiúsculas e minúsculas | #2 | test_produtos |
+| CT20 | Compra desconta o estoque; pedido recusado não desconta | #3 | test_pedidos |
+| CT21 | Recusa telefone com letras ou sem DDD | #4 | test_pedidos |
+| CT22 | Frete grátis exatamente em R$ 150,00 | #5 | test_servicos |

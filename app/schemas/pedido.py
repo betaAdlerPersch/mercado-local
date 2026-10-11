@@ -7,13 +7,23 @@ from app.models import EstadoPedido
 
 class ItemPedidoEntrada(BaseModel):
     produto_id: int
-    quantidade: int = Field(ge=0, le=50)
+    quantidade: int = Field(ge=1, le=50)
 
 
 class ClienteEntrada(BaseModel):
     nome: str = Field(min_length=3, max_length=120)
     email: EmailStr
     telefone: str = Field(min_length=8, max_length=30)
+
+    @field_validator("telefone")
+    @classmethod
+    def validar_telefone(cls, valor: str) -> str:
+        if any(c.isalpha() for c in valor):
+            raise ValueError("não pode conter letras")
+        digitos = "".join(c for c in valor if c.isdigit())
+        if len(digitos) not in (10, 11):
+            raise ValueError("informe DDD + número (10 ou 11 dígitos)")
+        return digitos
 
 
 class PedidoEntrada(BaseModel):

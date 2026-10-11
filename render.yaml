@@ -1,0 +1,30 @@
+# Blueprint do Render: cria o banco PostgreSQL e o serviço web juntos.
+# No painel do Render: New > Blueprint > escolha este repositório.
+services:
+  - type: web
+    name: mercado-local
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    # Cria as tabelas e os dados iniciais (só na primeira vez) e inicia o servidor
+    startCommand: python -m scripts.init_db && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        fromDatabase:
+          name: mercado-local-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@mercadolocal.com
+      - key: ADMIN_PASSWORD
+        sync: false # o Render pede o valor na criação; não fica no repositório
+
+databases:
+  - name: mercado-local-db
+    plan: free
+    databaseName: mercado_local
+    user: mercado

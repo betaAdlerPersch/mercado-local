@@ -123,7 +123,12 @@ function aumentar(id) {
 }
 
 function diminuir(id) {
-    estado.cesta[id] = Math.max(0, (estado.cesta[id] || 0) - 1);
+    const novaQuantidade = (estado.cesta[id] || 0) - 1;
+    if (novaQuantidade <= 0) {
+        delete estado.cesta[id];
+    } else {
+        estado.cesta[id] = novaQuantidade;
+    }
     salvarCesta();
     renderizarCesta();
 }
